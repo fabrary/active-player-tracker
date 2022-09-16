@@ -1,0 +1,25 @@
+service: active-player-tracker
+frameworkVersion: "3"
+useDotenv: true
+
+plugins:
+  - serverless-esbuild
+  # - serverless-plugin-aws-alerts
+
+provider:
+  logRetentionInDays: 14
+  name: aws
+  runtime: nodejs16.x
+  region: us-east-2
+  stage: ${opt:stage, env:STAGE, "dev"}
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000"
+
+functions:
+  hello:
+    handler: src/hello.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /trigger
